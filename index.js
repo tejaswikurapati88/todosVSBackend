@@ -100,7 +100,7 @@ app.post('/api/todos', async (request, response)=>{
         const {id, task, status} = dataDetails
         const postQuery = `
         INSERT INTO todos (id, task, status)
-        values ('${id}', '${task}', '${status}');`
+        values ('${id}', '${task}', ${status});`
         await db.run(postQuery)
         response.send('Todo Successfully Added')
       
@@ -114,7 +114,7 @@ app.put('/api/todos/:id', async (req, res)=>{
     const putQuery= `
       update todos 
       set task= '${task}'
-      where id= ${id};
+      where id= '${id}';
     `
     await db.run(putQuery)
     res.send('Task updated successfully')
@@ -127,18 +127,19 @@ app.put('/api/todos/status/:id', async (req, res)=>{
     const {status}= data 
     const updateStatusQ= `
       update todos 
-      set status = '${status}'
-      where id=${id}
+      set status = ${status}
+      where id= "${id}";
     `
     await db.run(updateStatusQ)
     res.send('status changed')
 })
 
+
 app.delete('/api/todos/:id', async (req, res)=>{
     // DELETE TODO
     const {id}= req.params
     const sqlDeleteQuery= `
-      delete from todos where id= ${id};
+      delete from todos where id= '${id}';
     `
     await db.run(sqlDeleteQuery)
     res.send('Task Deleted Successfully')
